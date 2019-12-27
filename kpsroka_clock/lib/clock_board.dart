@@ -8,6 +8,20 @@ List<Bezier> shapeOne = [
   Bezier.fromPoints([Vector2(76, 58), Vector2(76, 114), Vector2(76, 180)]),
 ];
 
+List<Bezier> shapeTwo = [
+  Bezier.fromPoints(
+      [Vector2(36, 70), Vector2(36, 72), Vector2(56, 32), Vector2(76, 32)]),
+  Bezier.fromPoints(
+      [Vector2(76, 32), Vector2(92, 32), Vector2(108, 46), Vector2(108, 60)]),
+  Bezier.fromPoints([
+    Vector2(108, 60),
+    Vector2(108, 100),
+    Vector2(60, 120),
+    Vector2(40, 160)
+  ]),
+  Bezier.fromPoints([Vector2(40, 160), Vector2(76, 160), Vector2(112, 160)]),
+];
+
 class ClockBoard extends StatelessWidget {
   const ClockBoard();
 
@@ -34,7 +48,14 @@ class ClockBoard extends StatelessWidget {
               style: TextStyle(color: Colors.black, fontSize: 120),
             ),
           ),
-          Positioned(child: DrawnShape(shapes: shapeOne,),)
+          Positioned(
+            left: 0,
+            child: DrawnShape(shapes: shapeOne),
+          ),
+          Positioned(
+            left: 200,
+            child: DrawnShape(shapes: shapeTwo),
+          )
         ],
       ),
     );
