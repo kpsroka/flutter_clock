@@ -4,6 +4,7 @@
 
 import 'dart:async';
 
+import 'package:digital_clock/clock_board.dart';
 import 'package:flutter_clock_helper/model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -82,7 +83,14 @@ class _DigitalClockState extends State<DigitalClock> {
       child: DefaultTextStyle(
         style: GoogleFonts.alegreyaSC(),
         child: Container(
-          child: const Center(child: CalendarCard()),
+          child: Center(
+            child: Row(
+              children: [
+                const Expanded(flex: 3, child: ClockBoard()),
+                const Expanded(flex: 1, child: CalendarCard()),
+              ],
+            ),
+          ),
         ),
       ),
     );
