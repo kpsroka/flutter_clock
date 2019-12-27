@@ -136,7 +136,6 @@ class _TearOff extends StatelessWidget {
     return CustomPaint(
       painter: _TearOffPainter(_backTearOffPoints),
       foregroundPainter: _TearOffPainter(_frontTearOffPoints),
-      child: FittedBox(fit: BoxFit.fill),
     );
   }
 }
