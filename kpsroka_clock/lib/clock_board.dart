@@ -22,8 +22,32 @@ List<Bezier> shapeTwo = [
   Bezier.fromPoints([Vector2(40, 160), Vector2(76, 160), Vector2(112, 160)]),
 ];
 
-class ClockBoard extends StatelessWidget {
+class ClockBoard extends StatefulWidget {
   const ClockBoard();
+
+  @override
+  _ClockBoardState createState() => _ClockBoardState();
+}
+
+class _ClockBoardState extends State<ClockBoard>
+    with SingleTickerProviderStateMixin {
+  List<Bezier> currentShape = shapeOne;
+
+  @override
+  void initState() {
+    super.initState();
+    _switchShape(shapeTwo);
+  }
+
+  void _switchShape(List<Bezier> nextShape) async {
+    await Future.delayed(Duration(seconds: 10));
+    if (super.mounted) {
+      _switchShape(currentShape);
+      setState(() {
+        currentShape = nextShape;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,12 +74,8 @@ class ClockBoard extends StatelessWidget {
           ),
           Positioned(
             left: 0,
-            child: DrawnShape(shapes: shapeOne),
+            child: DrawnShape(shapes: currentShape),
           ),
-          Positioned(
-            left: 200,
-            child: DrawnShape(shapes: shapeTwo),
-          )
         ],
       ),
     );
