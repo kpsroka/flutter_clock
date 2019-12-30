@@ -91,7 +91,7 @@ List<Bezier> shapeSeven = [
 
 List<Bezier> shapeEight = [
   Bezier.fromPoints(
-    [Vector2(70, 30), Vector2(35, 30), Vector2(32, 70), Vector2(67, 89)],
+    [Vector2(70, 30), Vector2(35, 30), Vector2(26, 70), Vector2(67, 89)],
   ),
   Bezier.fromPoints(
     [Vector2(67, 89), Vector2(108, 89), Vector2(111, 30), Vector2(70, 30)],
