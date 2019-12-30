@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bezier/bezier.dart';
 import 'package:digital_clock/drawn_shape.dart';
 import 'package:digital_clock/shapes.dart';
@@ -13,7 +15,7 @@ class ClockBoard extends StatefulWidget {
 class _ClockBoardState extends State<ClockBoard>
     with SingleTickerProviderStateMixin {
   int _shapeIndex = 0;
-  
+
   @override
   void initState() {
     super.initState();
@@ -23,7 +25,7 @@ class _ClockBoardState extends State<ClockBoard>
   void _switchShape() async {
     await Future.delayed(Duration(seconds: 10));
     if (super.mounted) {
-      final nextShapeIndex = (_shapeIndex += 1) % shapes.length;
+      final nextShapeIndex = Random().nextInt(10000);
       _switchShape();
       setState(() {
         _shapeIndex = nextShapeIndex;
@@ -54,9 +56,21 @@ class _ClockBoardState extends State<ClockBoard>
               style: TextStyle(color: Colors.black, fontSize: 120),
             ),
           ),
-          Positioned(
-            left: 0,
-            child: DrawnShape(shapes: shapes[_shapeIndex]),
+          Positioned.fill(
+            child: Center(
+              child: Container(
+                color: Colors.lightGreen.withAlpha(0xf0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    DrawnShape(shapes: shapes[_shapeIndex ~/ 1000]),
+                    DrawnShape(shapes: shapes[(_shapeIndex ~/ 100) % 10]),
+                    DrawnShape(shapes: shapes[(_shapeIndex ~/ 10) % 10]),
+                    DrawnShape(shapes: shapes[_shapeIndex % 10]),
+                  ],
+                ),
+              ),
+            ),
           ),
         ],
       ),

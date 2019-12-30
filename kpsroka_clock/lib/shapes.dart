@@ -10,8 +10,8 @@ List<Bezier> shapeZero = [
 ];
 
 List<Bezier> shapeOne = [
-  Bezier.fromPoints([Vector2(40, 100), Vector2(58, 74), Vector2(76, 58)]),
-  Bezier.fromPoints([Vector2(76, 58), Vector2(76, 114), Vector2(76, 180)]),
+  Bezier.fromPoints([Vector2(40, 80), Vector2(58, 54), Vector2(76, 38)]),
+  Bezier.fromPoints([Vector2(76, 38), Vector2(76, 109), Vector2(76, 170)]),
 ];
 
 List<Bezier> shapeTwo = [
@@ -91,34 +91,34 @@ List<Bezier> shapeSeven = [
 
 List<Bezier> shapeEight = [
   Bezier.fromPoints(
-    [Vector2(70, 40), Vector2(40, 40), Vector2(38, 80), Vector2(68, 80)],
+    [Vector2(70, 30), Vector2(35, 30), Vector2(32, 70), Vector2(67, 89)],
   ),
   Bezier.fromPoints(
-    [Vector2(68, 80), Vector2(103, 80), Vector2(105, 40), Vector2(70, 40)],
+    [Vector2(67, 89), Vector2(108, 89), Vector2(111, 30), Vector2(70, 30)],
   ),
   Bezier.fromPoints(
-    [Vector2(60, 80), Vector2(38, 80), Vector2(20, 135), Vector2(60, 135)],
+    [Vector2(67, 89), Vector2(24, 89), Vector2(10, 170), Vector2(64, 170)],
   ),
   Bezier.fromPoints(
-    [Vector2(60, 135), Vector2(100, 135), Vector2(98, 80), Vector2(68, 80)],
+    [Vector2(64, 170), Vector2(118, 170), Vector2(102, 89), Vector2(68, 89)],
   ),
 ];
 
 List<Bezier> shapeNine = [
   Bezier.fromPoints(
-    [Vector2(100, 70), Vector2(100, 100), Vector2(50, 100), Vector2(50, 70)],
+    [Vector2(110, 60), Vector2(110, 90), Vector2(42, 90), Vector2(42, 60)],
   ),
   Bezier.fromPoints(
-    [Vector2(50, 70), Vector2(50, 40), Vector2(100, 40), Vector2(100, 70)],
+    [Vector2(42, 60), Vector2(42, 20), Vector2(110, 20), Vector2(110, 60)],
   ),
   Bezier.fromPoints(
-    [Vector2(100, 70), Vector2(100, 90), Vector2(100, 110)],
+    [Vector2(110, 60), Vector2(110, 85), Vector2(110, 110)],
   ),
   Bezier.fromPoints(
-    [Vector2(100, 110), Vector2(100, 150), Vector2(60, 150)],
+    [Vector2(110, 110), Vector2(110, 160), Vector2(57, 160)],
   ),
   Bezier.fromPoints(
-    [Vector2(60, 150), Vector2(50, 150), Vector2(50, 135)],
+    [Vector2(57, 160), Vector2(40, 160), Vector2(40, 135)],
   ),
 ];
 
