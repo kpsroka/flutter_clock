@@ -2,35 +2,21 @@ import 'dart:math';
 
 import 'dart:ui';
 import 'package:bezier/bezier.dart';
+import 'package:digital_clock/shapes.dart';
 import 'package:flutter/material.dart' hide Gradient;
 import 'package:vector_math/vector_math.dart' show Vector2;
 
 class DrawnShape extends StatefulWidget {
-  final List<Bezier> shapes;
+  final BezierShape shape;
 
-  const DrawnShape({Key key, this.shapes}) : super(key: key);
+  const DrawnShape({Key key, this.shape}) : super(key: key);
 
   @override
   _DrawnShapeState createState() => _DrawnShapeState();
 }
 
 class _DrawnShapeState extends State<DrawnShape> with TickerProviderStateMixin {
-  static Bezier disturbBezier(Bezier shape) {
-    Random random = Random();
-
-    return Bezier.fromPoints(shape.points.map((Vector2 point) {
-      if (point == shape.startPoint || point == shape.endPoint) {
-        return point;
-      } else {
-        final double deltaX = (random.nextDouble() - 0.5) * 12;
-        final double deltaY = (random.nextDouble() - 0.5) * 12;
-
-        return point + Vector2(deltaX, deltaY);
-      }
-    }).toList());
-  }
-
-  List<Bezier> _drawnShapes;
+  BezierShape _drawnShape;
   AnimationController _shapePaintController;
   AnimationController _clearPaintController;
 
@@ -38,7 +24,7 @@ class _DrawnShapeState extends State<DrawnShape> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    _drawnShapes = widget.shapes.map(disturbBezier).toList();
+    _drawnShape = _getDrawnShape();
 
     _shapePaintController =
         AnimationController(vsync: this, duration: Duration(seconds: 2));
@@ -63,20 +49,22 @@ class _DrawnShapeState extends State<DrawnShape> with TickerProviderStateMixin {
 
   @override
   void didUpdateWidget(DrawnShape oldWidget) {
-    if (oldWidget.shapes != widget.shapes) {
+    if (oldWidget.shape != widget.shape) {
       _shapePaintController.stop();
       _clearPaintController.stop();
       _clearPaintController.forward().then((void _) {
         _shapePaintController.reset();
         _clearPaintController.reset();
-        _drawnShapes.clear();
-        _drawnShapes.addAll(widget.shapes.map(disturbBezier));
+        _drawnShape = _getDrawnShape();
         _shapePaintController.forward();
       });
     }
 
     super.didUpdateWidget(oldWidget);
   }
+
+  BezierShape _getDrawnShape() => widget.shape
+      .disturbed(random: Random());
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +75,7 @@ class _DrawnShapeState extends State<DrawnShape> with TickerProviderStateMixin {
         willChange: _shapePaintController.isAnimating ||
             _clearPaintController.isAnimating,
         child: SizedBox(
-          width: 140,
+          width: _drawnShape.getBoundingRect().width,
           height: 200,
           child: Container(color: Colors.white70),
         ),
@@ -97,7 +85,7 @@ class _DrawnShapeState extends State<DrawnShape> with TickerProviderStateMixin {
 
   CustomPainter _createPainter() {
     return BezierShapePainter(
-        shapes: _drawnShapes, progress: _shapePaintController.value);
+        shape: _drawnShape, progress: _shapePaintController.value);
   }
 
   CustomPainter _createClearPainter() {
@@ -111,18 +99,19 @@ class BezierShapePainter extends CustomPainter {
     ..strokeCap = StrokeCap.round
     ..strokeWidth = 4;
 
-  final List<Bezier> shapes;
+  final BezierShape shape;
   final double progress;
 
   final List<double> _lengths;
   final double _totalLength;
 
-  BezierShapePainter({@required this.shapes, @required this.progress})
-      : assert(shapes != null && shapes.isNotEmpty),
+  BezierShapePainter({@required this.shape, @required this.progress})
+      : assert(shape != null),
         assert(progress != null && progress >= 0.0 && progress <= 1.0),
-        _lengths = shapes.map((Bezier shape) => shape.length).toList(),
-        _totalLength =
-            shapes.map((Bezier shape) => shape.length).reduce((a, b) => a + b);
+        _lengths = shape.curves.map((Bezier shape) => shape.length).toList(),
+        _totalLength = shape.curves
+            .map((Bezier shape) => shape.length)
+            .reduce((a, b) => a + b);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -130,7 +119,7 @@ class BezierShapePainter extends CustomPainter {
     double currentLength = 0.0;
     int nextShapeIndex = 0;
     while (currentLength < lengthLimit) {
-      _drawShape(canvas, shapes[nextShapeIndex], lengthLimit - currentLength);
+      _drawShape(canvas, shape.curves[nextShapeIndex], lengthLimit - currentLength);
       currentLength += _lengths[nextShapeIndex];
       nextShapeIndex++;
     }
@@ -174,7 +163,7 @@ class BezierShapePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(BezierShapePainter oldDelegate) {
-    return oldDelegate.progress != progress || oldDelegate.shapes != shapes;
+    return oldDelegate.progress != progress || oldDelegate.shape != shape;
   }
 }
 

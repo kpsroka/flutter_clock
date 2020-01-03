@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:bezier/bezier.dart';
 import 'package:digital_clock/drawn_shape.dart';
 import 'package:digital_clock/shapes.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +34,11 @@ class _ClockBoardState extends State<ClockBoard>
 
   @override
   Widget build(BuildContext context) {
+    BezierShape mergedShape = shapes[_shapeIndex ~/ 1000].normalized(width: 140, height: 200)
+        .joinedWith(shapes[(_shapeIndex ~/ 100) % 10].normalized(width: 140, height: 200), offset: 32)
+        .joinedWith(shapes[(_shapeIndex ~/ 10) % 10].normalized(width: 140, height: 200), offset: 32)
+        .joinedWith(shapes[_shapeIndex % 10].normalized(width: 140, height: 200), offset: 32);
+
     return Container(
       decoration: ShapeDecoration(
         shape: RoundedRectangleBorder(
@@ -63,10 +67,7 @@ class _ClockBoardState extends State<ClockBoard>
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    DrawnShape(shapes: shapes[_shapeIndex ~/ 1000]),
-                    DrawnShape(shapes: shapes[(_shapeIndex ~/ 100) % 10]),
-                    DrawnShape(shapes: shapes[(_shapeIndex ~/ 10) % 10]),
-                    DrawnShape(shapes: shapes[_shapeIndex % 10]),
+                    DrawnShape(shape: mergedShape),
                   ],
                 ),
               ),
