@@ -64,12 +64,7 @@ class _ClockBoardState extends State<ClockBoard>
             child: Center(
               child: Container(
                 color: Colors.lightGreen.withAlpha(0xf0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    DrawnShape(shape: mergedShape),
-                  ],
-                ),
+                child: DrawnShape(shape: mergedShape),
               ),
             ),
           ),
