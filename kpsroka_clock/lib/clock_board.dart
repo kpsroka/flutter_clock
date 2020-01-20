@@ -11,25 +11,6 @@ class ClockBoard extends StatefulWidget {
 }
 
 class _ClockBoardState extends State<ClockBoard> with SingleTickerProviderStateMixin {
-  int _shapeIndex = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _switchShape();
-  }
-
-  void _switchShape() async {
-    await Future.delayed(Duration(seconds: 10));
-    if (super.mounted) {
-      final nextShapeIndex = Random().nextInt(10000);
-      _switchShape();
-      setState(() {
-        _shapeIndex = nextShapeIndex;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -47,8 +28,9 @@ class _ClockBoardState extends State<ClockBoard> with SingleTickerProviderStateM
         children: [
           Positioned.fill(
             child: FractionallySizedBox(
-              widthFactor: 0.7,
-              heightFactor: 0.35,
+              widthFactor: 0.5,
+              heightFactor: 0.25,
+              alignment: Alignment(-0.25, 0.15),
               child: DrawnShapeArea(),
             ),
           ),
