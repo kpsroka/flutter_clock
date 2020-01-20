@@ -1,5 +1,5 @@
-name: digital_clock
-description: Digital clock.
+name: kpsroka_clock
+description: Digital clock for the Flutter Clock contest.
 version: 1.0.0+1
 
 environment:
