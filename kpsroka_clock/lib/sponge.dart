@@ -73,7 +73,7 @@ class _SpongePainter extends CustomPainter {
       double sweepRatio = min(1.0, progressRatio);
 
       Rect strokeRect = Rect.fromLTRB(
-        size.width - (currentStroke * _paint.strokeWidth),
+        size.width - ((currentStroke - 1) * _paint.strokeWidth),
         size.height / 2 - 500,
         2 * (500 + size.width) - (currentStroke * _paint.strokeWidth),
         size.height / 2 + 500,
