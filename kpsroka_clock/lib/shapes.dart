@@ -28,8 +28,7 @@ extension DisturbBezier on Bezier {
   Bezier offsetByX(double offset) {
     assert(offset != null);
     Vector2 offsetVector = Vector2(offset, 0);
-    return Bezier.fromPoints(
-        points.map((Vector2 point) => point + offsetVector).toList());
+    return Bezier.fromPoints(points.map((Vector2 point) => point + offsetVector).toList());
   }
 }
 
@@ -49,14 +48,18 @@ class BezierShape {
     final Aabb2 boundingRect = getBoundingRect();
 
     final Vector2 offsetVector = boundingRect.min;
-    final double scale =
-        (boundingRect.width / boundingRect.height >= (width / height)
-            ? width / boundingRect.width
-            : height / boundingRect.height);
+    final double scale = (boundingRect.width / boundingRect.height >= (width / height)
+        ? width / boundingRect.width
+        : height / boundingRect.height);
+    final Vector2 centeringVector = Vector2(
+          width - boundingRect.width * scale,
+          height - boundingRect.height * scale,
+        ) /
+        2;
 
     return BezierShape(curves
         .map((Bezier curve) => Bezier.fromPoints(curve.points
-            .map((Vector2 point) => (point - offsetVector) * scale)
+            .map((Vector2 point) => (point - offsetVector) * scale + centeringVector)
             .toList()))
         .toList());
   }
@@ -65,23 +68,13 @@ class BezierShape {
     assert(random != null);
     assert(scale > 0);
 
-    return BezierShape(
-        curves.map((Bezier curve) => curve.disturbed(random, scale)).toList());
-  }
-
-  BezierShape joinedWith(BezierShape other, {double offset = 0.0}) {
-    double thisWidth = getBoundingRect().width;
-    return BezierShape(this.curves.followedBy(other.curves
-        .map((Bezier curve) => curve.offsetByX(thisWidth + offset)))
-        .toList());
+    return BezierShape(curves.map((Bezier curve) => curve.disturbed(random, scale)).toList());
   }
 }
 
 BezierShape _shapeZero = BezierShape([
-  Bezier.fromPoints(
-      [Vector2(78, 30), Vector2(122, 30), Vector2(110, 160), Vector2(66, 160)]),
-  Bezier.fromPoints(
-      [Vector2(66, 160), Vector2(22, 160), Vector2(34, 30), Vector2(78, 30)]),
+  Bezier.fromPoints([Vector2(78, 30), Vector2(122, 30), Vector2(110, 160), Vector2(66, 160)]),
+  Bezier.fromPoints([Vector2(66, 160), Vector2(22, 160), Vector2(34, 30), Vector2(78, 30)]),
 ]);
 
 BezierShape _shapeOne = BezierShape([
@@ -90,30 +83,17 @@ BezierShape _shapeOne = BezierShape([
 ]);
 
 BezierShape _shapeTwo = BezierShape([
-  Bezier.fromPoints(
-      [Vector2(36, 70), Vector2(36, 72), Vector2(56, 32), Vector2(76, 32)]),
-  Bezier.fromPoints(
-      [Vector2(76, 32), Vector2(92, 32), Vector2(108, 46), Vector2(108, 60)]),
-  Bezier.fromPoints([
-    Vector2(108, 60),
-    Vector2(108, 100),
-    Vector2(60, 120),
-    Vector2(40, 160)
-  ]),
+  Bezier.fromPoints([Vector2(36, 70), Vector2(36, 72), Vector2(56, 32), Vector2(76, 32)]),
+  Bezier.fromPoints([Vector2(76, 32), Vector2(92, 32), Vector2(108, 46), Vector2(108, 60)]),
+  Bezier.fromPoints([Vector2(108, 60), Vector2(108, 100), Vector2(60, 120), Vector2(40, 160)]),
   Bezier.fromPoints([Vector2(40, 160), Vector2(76, 160), Vector2(112, 160)]),
 ]);
 
 BezierShape _shapeThree = BezierShape([
   Bezier.fromPoints([Vector2(30, 40), Vector2(65, 40), Vector2(100, 40)]),
   Bezier.fromPoints([Vector2(100, 40), Vector2(81, 60), Vector2(62, 80)]),
-  Bezier.fromPoints(
-      [Vector2(62, 80), Vector2(84, 80), Vector2(105, 90), Vector2(105, 112)]),
-  Bezier.fromPoints([
-    Vector2(105, 112),
-    Vector2(105, 164),
-    Vector2(50, 180),
-    Vector2(30, 132)
-  ]),
+  Bezier.fromPoints([Vector2(62, 80), Vector2(84, 80), Vector2(105, 90), Vector2(105, 112)]),
+  Bezier.fromPoints([Vector2(105, 112), Vector2(105, 164), Vector2(50, 180), Vector2(30, 132)]),
 ]);
 
 BezierShape _shapeFour = BezierShape([

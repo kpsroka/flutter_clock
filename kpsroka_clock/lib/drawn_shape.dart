@@ -8,8 +8,9 @@ import 'package:vector_math/vector_math.dart' show Vector2;
 
 class DrawnShape extends StatefulWidget {
   final BezierShape shape;
+  final AnimationController animationController;
 
-  const DrawnShape({Key key, this.shape}) : super(key: key);
+  const DrawnShape({Key key, this.shape, this.animationController}) : super(key: key);
 
   @override
   _DrawnShapeState createState() => _DrawnShapeState();
@@ -17,83 +18,63 @@ class DrawnShape extends StatefulWidget {
 
 class _DrawnShapeState extends State<DrawnShape> with TickerProviderStateMixin {
   BezierShape _drawnShape;
-  AnimationController _shapePaintController;
-  AnimationController _clearPaintController;
 
   @override
   void initState() {
     super.initState();
-
     _drawnShape = _getDrawnShape();
 
-    _shapePaintController =
-        AnimationController(vsync: this, duration: Duration(seconds: 2));
-    _clearPaintController =
-        AnimationController(vsync: this, duration: Duration(seconds: 4));
-
-    _shapePaintController.addListener(() {
-      setState(() {});
-    });
-    _clearPaintController.addListener(() {
-      setState(() {});
-    });
-    _shapePaintController.forward();
+    widget.animationController.addListener(_setStateCallback);
   }
 
   @override
   void dispose() {
-    _shapePaintController.dispose();
-    _clearPaintController.dispose();
+    widget.animationController.removeListener(_setStateCallback);
     super.dispose();
   }
+
+  void _setStateCallback() {
+    setState(() {});
+  }
+
+  BezierShape _getDrawnShape() => widget.shape.disturbed(random: Random());
 
   @override
   void didUpdateWidget(DrawnShape oldWidget) {
     if (oldWidget.shape != widget.shape) {
-      _shapePaintController.stop();
-      _clearPaintController.stop();
-      _clearPaintController.forward().then((void _) {
-        _shapePaintController.reset();
-        _clearPaintController.reset();
-        _drawnShape = _getDrawnShape();
-        _shapePaintController.forward();
-      });
+      _drawnShape = _getDrawnShape();
     }
-
     super.didUpdateWidget(oldWidget);
   }
-
-  BezierShape _getDrawnShape() => widget.shape
-      .disturbed(random: Random());
 
   @override
   Widget build(BuildContext context) {
     return RepaintBoundary(
-      child: CustomPaint(
-        painter: _createPainter(),
-        foregroundPainter: _createClearPainter(),
-        willChange: _shapePaintController.isAnimating ||
-            _clearPaintController.isAnimating,
-        child: SizedBox(
-          width: _drawnShape.getBoundingRect().width,
-          height: 200,
-          child: Container(color: Colors.white70),
-        ),
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          return CustomPaint(
+            painter: _createPainter(constraints.biggest),
+            willChange: widget.animationController.isAnimating,
+            child: SizedBox(
+              width: constraints.maxWidth,
+              height: constraints.maxHeight,
+              child: Container(),
+            ),
+          );
+        },
       ),
     );
   }
 
-  CustomPainter _createPainter() {
-    return BezierShapePainter(
-        shape: _drawnShape, progress: _shapePaintController.value);
-  }
-
-  CustomPainter _createClearPainter() {
-    return ClearPainter(progress: _clearPaintController.value);
+  CustomPainter _createPainter(Size size) {
+    return _BezierShapePainter(
+      shape: _drawnShape.normalized(width: size.width, height: size.height),
+      progress: widget.animationController.value,
+    );
   }
 }
 
-class BezierShapePainter extends CustomPainter {
+class _BezierShapePainter extends CustomPainter {
   static final Paint _paint = Paint()
     ..style = PaintingStyle.stroke
     ..strokeCap = StrokeCap.round
@@ -105,13 +86,11 @@ class BezierShapePainter extends CustomPainter {
   final List<double> _lengths;
   final double _totalLength;
 
-  BezierShapePainter({@required this.shape, @required this.progress})
+  _BezierShapePainter({@required this.shape, @required this.progress})
       : assert(shape != null),
         assert(progress != null && progress >= 0.0 && progress <= 1.0),
         _lengths = shape.curves.map((Bezier shape) => shape.length).toList(),
-        _totalLength = shape.curves
-            .map((Bezier shape) => shape.length)
-            .reduce((a, b) => a + b);
+        _totalLength = shape.curves.map((Bezier shape) => shape.length).reduce((a, b) => a + b);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -127,8 +106,7 @@ class BezierShapePainter extends CustomPainter {
 
   void _drawShape(Canvas canvas, Bezier shape, double remainingLength) {
     // leftSubcurveAt handles values > 1.0 well
-    final Bezier cutShape =
-        shape.leftSubcurveAt(remainingLength / shape.length);
+    final Bezier cutShape = shape.leftSubcurveAt(remainingLength / shape.length);
 
     Path shapePath = Path();
     shapePath.moveTo(cutShape.startPoint.x, cutShape.startPoint.y);
@@ -152,8 +130,7 @@ class BezierShapePainter extends CustomPainter {
         shapePoints.last.y,
       );
     } else {
-      throw new UnsupportedError(
-          'Cannot draw bezier curves of order ${cutShape.order}');
+      throw new UnsupportedError('Cannot draw bezier curves of order ${cutShape.order}');
     }
 
     shapePath.moveTo(shape.startPoint.x, shape.startPoint.y);
@@ -162,79 +139,7 @@ class BezierShapePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(BezierShapePainter oldDelegate) {
+  bool shouldRepaint(_BezierShapePainter oldDelegate) {
     return oldDelegate.progress != progress || oldDelegate.shape != shape;
-  }
-}
-
-class ClearPainter extends CustomPainter {
-  static final Paint _paint = Paint()
-    ..color = Colors.white
-    ..strokeWidth = 32
-    ..style = PaintingStyle.stroke
-    ..strokeCap = StrokeCap.butt;
-
-  final double progress;
-
-  ClearPainter({this.progress})
-      : assert(progress != null && progress >= 0.0 && progress <= 1.0);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    canvas.clipRect(Rect.fromLTWH(0, 0, size.width, size.height));
-
-    for (int currentStroke = 1; currentStroke <= 5; currentStroke++) {
-      double progressRatio = (progress * 6 - currentStroke + 1);
-      if (progressRatio <= 0.0) {
-        return;
-      }
-
-      double sweepRatio = min(1.0, progressRatio);
-
-      Rect strokeRect = Rect.fromLTRB(
-          size.width - (currentStroke * _paint.strokeWidth),
-          size.height - (550 + size.width),
-          2 * (550 + size.width),
-          size.height + (550 + size.width));
-      double strokeStartAngle = pi;
-      double strokeSweepAngle =
-          asin((size.height) / (550 + (currentStroke * _paint.strokeWidth)));
-
-      Shader strokeShader = _getGradient(
-          progressRatio, pi + strokeSweepAngle * sweepRatio, strokeRect.center);
-      _paint..shader = strokeShader;
-
-      canvas.drawArc(
-        strokeRect,
-        strokeStartAngle,
-        strokeSweepAngle * sweepRatio,
-        /* useCenter */ false,
-        _paint,
-      );
-    }
-  }
-
-  @override
-  bool shouldRepaint(ClearPainter oldDelegate) {
-    return oldDelegate.progress != progress;
-  }
-
-  Shader _getGradient(double progressRatio, double endAngle, Offset center) {
-    if (progressRatio >= 2.0) {
-      return null;
-    }
-
-    Color startColor = Colors.white;
-    Color endColor =
-        Color.lerp(Colors.black, Colors.white, max(0.0, progressRatio - 1.0));
-
-    return Gradient.sweep(
-      center,
-      [startColor, startColor, endColor],
-      [0, max(0.5, progressRatio - 1.0), 1.0],
-      TileMode.clamp,
-      /* startAngle */ pi,
-      endAngle,
-    );
   }
 }
