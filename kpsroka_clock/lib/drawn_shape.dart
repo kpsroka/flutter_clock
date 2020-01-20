@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'dart:ui';
 import 'package:bezier/bezier.dart';
-import 'package:digital_clock/shapes.dart';
+import 'package:kpsroka_clock/shapes.dart';
 import 'package:flutter/material.dart' hide Gradient;
 import 'package:vector_math/vector_math.dart' show Vector2;
 

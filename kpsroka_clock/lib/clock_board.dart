@@ -1,8 +1,6 @@
 import 'dart:math';
 
-import 'package:digital_clock/drawn_shape.dart';
-import 'package:digital_clock/drawn_shape_area.dart';
-import 'package:digital_clock/shapes.dart';
+import 'package:kpsroka_clock/drawn_shape_area.dart';
 import 'package:flutter/material.dart';
 
 class ClockBoard extends StatefulWidget {

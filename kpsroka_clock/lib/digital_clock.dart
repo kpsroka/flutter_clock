@@ -4,7 +4,7 @@
 
 import 'dart:async';
 
-import 'package:digital_clock/clock_board.dart';
+import 'package:kpsroka_clock/clock_board.dart';
 import 'package:flutter_clock_helper/model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

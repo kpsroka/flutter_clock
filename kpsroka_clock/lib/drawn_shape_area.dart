@@ -1,9 +1,9 @@
 import 'dart:math';
 
-import 'package:digital_clock/drawn_shape.dart';
-import 'package:digital_clock/model_provider.dart';
-import 'package:digital_clock/shapes.dart';
-import 'package:digital_clock/sponge.dart';
+import 'package:kpsroka_clock/drawn_shape.dart';
+import 'package:kpsroka_clock/model_provider.dart';
+import 'package:kpsroka_clock/shapes.dart';
+import 'package:kpsroka_clock/sponge.dart';
 import 'package:flutter/material.dart';
 
 class DrawnShapeArea extends StatefulWidget {

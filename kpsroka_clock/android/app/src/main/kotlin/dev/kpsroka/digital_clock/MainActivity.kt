@@ -1,4 +1,4 @@
-package com.example.digital_clock
+package dev.kpsroka.clock
 
 import android.os.Bundle
 import io.flutter.app.FlutterActivity
