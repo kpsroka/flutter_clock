@@ -94,10 +94,7 @@ class _DrawnShapeAreaState extends State<DrawnShapeArea> with TickerProviderStat
           currentShapes.replaceRange(firstChangeIndex, 4, nextShapes.sublist(firstChangeIndex));
         });
       }
-    }, onError: (dynamic e) {
-      debugPrint('Caught error $e when running sponge controller');
     });
-    debugPrint("Sponge controller started with duration ${spongeController.duration}");
   }
 
   @override
