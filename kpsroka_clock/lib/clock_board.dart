@@ -1,5 +1,4 @@
-import 'dart:math';
-
+import 'package:kpsroka_clock/calendar_card.dart';
 import 'package:kpsroka_clock/drawn_shape_area.dart';
 import 'package:flutter/material.dart';
 
@@ -24,14 +23,23 @@ class _ClockBoardState extends State<ClockBoard> with SingleTickerProviderStateM
         color: Colors.white,
       ),
       padding: EdgeInsets.all(8),
-      child: Stack(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Positioned.fill(
+          const Expanded(
+            flex: 2,
             child: FractionallySizedBox(
-              widthFactor: 0.5,
-              heightFactor: 0.25,
-              alignment: Alignment(-0.25, 0.15),
+              widthFactor: 0.7,
+              heightFactor: 0.35,
               child: DrawnShapeArea(),
+            ),
+          ),
+          const Expanded(
+            flex: 1,
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 64, horizontal: 12),
+              child: CalendarCard(),
             ),
           ),
         ],

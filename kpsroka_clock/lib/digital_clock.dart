@@ -74,14 +74,7 @@ class _DigitalClockState extends State<DigitalClock> {
       child: DefaultTextStyle(
         style: TextStyle(fontFamily: 'AlegreyaSC'),
         child: Container(
-          child: Center(
-            child: Row(
-              children: [
-                const Expanded(flex: 3, child: ClockBoard()),
-                const Expanded(flex: 1, child: CalendarCard()),
-              ],
-            ),
-          ),
+          child: const Center(child: ClockBoard()),
         ),
       ),
     );

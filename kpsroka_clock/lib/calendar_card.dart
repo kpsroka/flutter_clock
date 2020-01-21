@@ -10,8 +10,8 @@ class CalendarCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1.0 / 1.4,
+    return Card(
+      elevation: 12,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -28,7 +28,7 @@ class CalendarCard extends StatelessWidget {
             flex: 11,
             child: Container(
               alignment: Alignment.center,
-              color: Colors.white,
+              color: Colors.grey[50],
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 24),
                 child: Column(
@@ -36,9 +36,9 @@ class CalendarCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     SizedBox(height: 35, child: _TearOff()),
-                    const _Month(),
-                    const Expanded(child: Center(child: _Day())),
-                    const _DayOfWeek(),
+                    const Expanded(child: _Month()),
+                    const Expanded(flex: 4, child: Center(child: _Day())),
+                    const Expanded(child: _DayOfWeek()),
                   ],
                 ),
               ),
@@ -68,18 +68,43 @@ class _Month extends StatelessWidget {
   }
 }
 
+class _AdaptiveTextSize extends StatelessWidget {
+  final Text child;
+  final double textSizeFactor;
+
+  const _AdaptiveTextSize({Key key, this.child, this.textSizeFactor = 0.5}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        return DefaultTextStyle(
+          style: TextStyle(
+            fontSize: constraints.maxHeight * textSizeFactor,
+            fontFamily: 'AlegreyaSC',
+          ),
+          child: child,
+        );
+      },
+    );
+  }
+}
+
 class _Day extends StatelessWidget {
   const _Day();
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      DateTimeProvider.of(
-        context,
-        granularity: DateTimeGranularity.day,
-      ).day.toString(),
-      textAlign: TextAlign.center,
-      style: TextStyle(color: Colors.black, fontSize: 240),
+    return _AdaptiveTextSize(
+      textSizeFactor: 0.7,
+      child: Text(
+        DateTimeProvider.of(
+          context,
+          granularity: DateTimeGranularity.day,
+        ).day.toString(),
+        textAlign: TextAlign.center,
+        style: TextStyle(color: Colors.black),
+      ),
     );
   }
 }
@@ -89,15 +114,17 @@ class _DayOfWeek extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      DateFormat.EEEE().format(
-        DateTimeProvider.of(
-          context,
-          granularity: DateTimeGranularity.day,
+    return _AdaptiveTextSize(
+      child: Text(
+        DateFormat.EEEE().format(
+          DateTimeProvider.of(
+            context,
+            granularity: DateTimeGranularity.day,
+          ),
         ),
+        textAlign: TextAlign.center,
+        style: TextStyle(color: Colors.black87),
       ),
-      textAlign: TextAlign.center,
-      style: TextStyle(color: Colors.black87, fontSize: 36),
     );
   }
 }
@@ -107,17 +134,19 @@ class _Year extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      DateTimeProvider.of(
-        context,
-        granularity: DateTimeGranularity.year,
-      ).year.toString(),
-      textAlign: TextAlign.center,
-      style: TextStyle(
+    return _AdaptiveTextSize(
+      child: Text(
+        DateTimeProvider.of(
+          context,
+          granularity: DateTimeGranularity.year,
+        ).year.toString(),
+        textAlign: TextAlign.center,
+        style: TextStyle(
           color: Colors.white,
-          fontSize: 64,
           fontWeight: FontWeight.w600,
-          shadows: [Shadow(offset: Offset(2, 2), blurRadius: 2.0)]),
+          shadows: [Shadow(offset: Offset(2, 2), blurRadius: 2.0)],
+        ),
+      ),
     );
   }
 }
@@ -128,8 +157,7 @@ class _TearOff extends StatelessWidget {
 
   _TearOff()
       : _frontTearOffPoints = List.generate(30, (_) => Random().nextInt(15)),
-        _backTearOffPoints =
-            List.generate(30, (int index) => Random().nextInt(10));
+        _backTearOffPoints = List.generate(30, (int index) => Random().nextInt(10));
 
   @override
   Widget build(BuildContext context) {
@@ -144,8 +172,7 @@ class _TearOffPainter extends CustomPainter {
   final List<int> tearOffPoints;
 
   _TearOffPainter(this.tearOffPoints)
-      : assert(tearOffPoints != null &&
-            tearOffPoints.every((int value) => value != null));
+      : assert(tearOffPoints != null && tearOffPoints.every((int value) => value != null));
 
   @override
   void paint(Canvas canvas, Size size) {

@@ -7,6 +7,8 @@ import 'package:kpsroka_clock/sponge.dart';
 import 'package:flutter/material.dart';
 
 class DrawnShapeArea extends StatefulWidget {
+  const DrawnShapeArea() : super();
+
   @override
   _DrawnShapeAreaState createState() => _DrawnShapeAreaState();
 }
