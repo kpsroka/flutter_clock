@@ -11,7 +11,6 @@ dependencies:
   flutter_clock_helper:
     path: ../flutter_clock_helper
   cupertino_icons: ^0.1.2
-  google_fonts: ^0.2.0
   intl: ^0.16.0
   bezier: ^1.1.5
   vector_math: ^2.0.8
@@ -22,3 +21,10 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  fonts:
+    - family: AlegreyaSC
+      fonts:
+        - asset: assets/AlegreyaSC/AlegreyaSC-Regular.ttf
+        - asset: assets/AlegreyaSC/AlegreyaSC-Bold.ttf
+          weight: 700

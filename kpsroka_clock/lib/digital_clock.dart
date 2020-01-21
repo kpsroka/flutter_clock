@@ -7,7 +7,6 @@ import 'dart:async';
 import 'package:kpsroka_clock/clock_board.dart';
 import 'package:flutter_clock_helper/model.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'calendar_card.dart';
 import 'model_provider.dart';
@@ -59,20 +58,12 @@ class _DigitalClockState extends State<DigitalClock> {
   void _updateTime() {
     setState(() {
       _dateTime = DateTime.now();
-      // Update once per minute. If you want to update every second, use the
-      // following code.
       _timer = Timer(
         Duration(minutes: 1) -
             Duration(seconds: _dateTime.second) -
             Duration(milliseconds: _dateTime.millisecond),
         _updateTime,
       );
-      // Update once per second, but make sure to do it at the beginning of each
-      // new second, so that the clock is accurate.
-      // _timer = Timer(
-      //   Duration(seconds: 1) - Duration(milliseconds: _dateTime.millisecond),
-      //   _updateTime,
-      // );
     });
   }
 
@@ -81,7 +72,7 @@ class _DigitalClockState extends State<DigitalClock> {
     return DateTimeProvider(
       dateTime: _dateTime,
       child: DefaultTextStyle(
-        style: GoogleFonts.alegreyaSC(),
+        style: TextStyle(fontFamily: 'AlegreyaSC'),
         child: Container(
           child: Center(
             child: Row(
