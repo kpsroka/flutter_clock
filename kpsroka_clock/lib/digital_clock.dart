@@ -8,7 +8,6 @@ import 'package:kpsroka_clock/clock_board.dart';
 import 'package:flutter_clock_helper/model.dart';
 import 'package:flutter/material.dart';
 
-import 'calendar_card.dart';
 import 'model_provider.dart';
 
 class DigitalClock extends StatefulWidget {
