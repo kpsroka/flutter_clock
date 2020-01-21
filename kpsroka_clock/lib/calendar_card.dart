@@ -55,15 +55,20 @@ class _Month extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      DateFormat.LLLL().format(
-        DateTimeProvider.of(
-          context,
-          granularity: DateTimeGranularity.month,
+    return _AdaptiveTextSize(
+      textSizeFactor: 0.75,
+      child: Text(
+        DateFormat.LLLL().format(
+          DateTimeProvider.of(
+            context,
+            granularity: DateTimeGranularity.month,
+          ),
+        ),
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: Colors.black,
         ),
       ),
-      textAlign: TextAlign.center,
-      style: TextStyle(color: Colors.black, fontSize: 48),
     );
   }
 }
